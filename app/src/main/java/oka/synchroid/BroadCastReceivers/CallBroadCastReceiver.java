@@ -11,7 +11,7 @@ import android.util.Log;
 public class CallBroadCastReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
-
+        Log.d("DEBUG","eeeeeeeeeeeeeeee");
         try {
             // TELEPHONY MANAGER class object to register one listner
             TelephonyManager tmgr = (TelephonyManager) context
