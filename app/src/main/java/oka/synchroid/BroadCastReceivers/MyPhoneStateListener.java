@@ -14,20 +14,24 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-
-
+import oka.synchroid.DataBase.DataBaseHelper;
+import oka.synchroid.Models.Settings;
 
 
 public class MyPhoneStateListener extends PhoneStateListener {
     private Context _context;
-    private boolean isStartRecord=false;
-    public MyPhoneStateListener(Context context)
-    {
+    private DataBaseHelper dataBaseHelper;
+    private boolean isStartRecord = false;
+
+    public MyPhoneStateListener(Context context) {
         super();
-        this._context=context;
+        this._context = context;
+        dataBaseHelper = new DataBaseHelper(context);
     }
-   private  MediaRecorder mRecorder=new MediaRecorder() ;
+
+    private MediaRecorder mRecorder = new MediaRecorder();
     private static String mFileName = null;
+
     public void onCallStateChanged(int state, String incomingNumber) {
 
         try {
@@ -39,10 +43,9 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                    if(isStartRecord)
-                    {
-                    Toast.makeText(_context, "END CALL REGISTRING", Toast.LENGTH_SHORT).show();
-                    stopRecordCall();
+                    if (isStartRecord) {
+                        Toast.makeText(_context, "END CALL REGISTRING", Toast.LENGTH_SHORT).show();
+                        stopRecordCall();
                     }
                     break;
                 default:
@@ -53,10 +56,9 @@ public class MyPhoneStateListener extends PhoneStateListener {
             Log.i("Exception", "PhoneStateListener() e = " + e);
         }
     }
-    private void recordCall()
-    {
-        File folder = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "Synchroid");
+
+    private void recordCall() {
+        File folder = Settings.RootAppFolder;
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
@@ -73,39 +75,32 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
         } catch (IllegalStateException e) {
 
-            Log.d("ERROR ","IllegalStateException");
+            Log.d("ERROR ", "IllegalStateException");
         } catch (Exception e) {
-            Log.d("ERROR ","IOException");
+            Log.d("ERROR ", "IOException");
             e.printStackTrace();
         }
         try {
-            isStartRecord=true;
+            isStartRecord = true;
             mRecorder.start();
         } catch (Exception e) {
 
         }
 
 
-
-
     }
 
-    private void stopRecordCall()
-    {
-        if(mRecorder!=null){
+    private void stopRecordCall() {
+        if (mRecorder != null) {
+            try {
+                mRecorder.stop();
+                mRecorder.reset();   // You can reuse the object by going back to setAudioSource() step
+                mRecorder.release();
+                isStartRecord = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-
-        try {
-            mRecorder.stop();
-            mRecorder.reset();   // You can reuse the object by going back to setAudioSource() step
-            mRecorder.release();
-            isStartRecord=false;
-             }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
-
     }
-    }
-    }
+}
