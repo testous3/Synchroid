@@ -20,6 +20,7 @@ import java.io.IOException;
 
 public class MyPhoneStateListener extends PhoneStateListener {
     private Context _context;
+    private boolean isStartRecord=false;
     public MyPhoneStateListener(Context context)
     {
         super();
@@ -38,8 +39,11 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
+                    if(isStartRecord)
+                    {
                     Toast.makeText(_context, "END CALL REGISTRING", Toast.LENGTH_SHORT).show();
                     stopRecordCall();
+                    }
                     break;
                 default:
                     Toast.makeText(_context, "default", Toast.LENGTH_SHORT).show();
@@ -52,57 +56,56 @@ public class MyPhoneStateListener extends PhoneStateListener {
     private void recordCall()
     {
         File folder = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "TollCulator");
+                File.separator + "Synchroid");
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
         }
 
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setOutputFile(Environment.getExternalStorageDirectory() +
+                File.separator + "Synchroid" + File.separator + "test.mpeg4");
 
-        mRecorder.setOutputFile("/data/test.txt");
         try {
             mRecorder.prepare();
+
+        } catch (IllegalStateException e) {
+
+            Log.d("ERROR ","IllegalStateException");
+        } catch (Exception e) {
+            Log.d("ERROR ","IOException");
+            e.printStackTrace();
+        }
+        try {
+            isStartRecord=true;
             mRecorder.start();
-        }
-        catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception ex)
-        {
-            ex.printStackTrace();
+        } catch (Exception e) {
+
         }
 
-        mRecorder.setOutputFile(mFileName);
 
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Log.d("DEBUG", "prepare() failed");
-        }
-
-        mRecorder.start();
-        Toast.makeText(_context, "START ENREGISTREMENT", Toast.LENGTH_SHORT).show();
 
 
     }
 
     private void stopRecordCall()
     {
+        if(mRecorder!=null){
 
-        Log.d("DEBUG", "SAVEGARDE DE L'ENREGISTREMENT");
 
         try {
             mRecorder.stop();
             mRecorder.reset();   // You can reuse the object by going back to setAudioSource() step
             mRecorder.release();
-        }
+            isStartRecord=false;
+             }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
     }
-}
+    }
+    }
