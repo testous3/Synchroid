@@ -15,7 +15,7 @@ public class Settings {
     public static File RootAppFolder = new File(Environment.getExternalStorageDirectory() +
             File.separator + "Synchroid");
     public static File RootRecordFolder = new File(Environment.getExternalStorageDirectory() +
-            File.separator + "Synchroid");
+            File.separator + "Synchroid" + File.separator + "RecordCall");
     public int Id;
     public RecordOutputFormat RecordOutputFormat;
 
