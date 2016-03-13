@@ -18,7 +18,7 @@ import oka.synchroid.Models.Settings;
 
 
 public class MyPhoneStateListener extends PhoneStateListener {
-    //  TESTTTTTTTTTTT
+
     private Context _context;
     private DataBaseHelper dataBaseHelper;
     private boolean isStartRecord = false;
