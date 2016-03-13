@@ -39,7 +39,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
                 case TelephonyManager.CALL_STATE_OFFHOOK:
 
-                    recordCall();
+                    recordCall(state, incomingNumber);
 
                     break;
                 case TelephonyManager.CALL_STATE_IDLE: {
@@ -56,7 +56,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
         }
     }
 
-    private void recordCall() throws IOException, InterruptedException {
+    private void recordCall(int state, String incomingNumber) {
         if (recorder != null)
             return;
         File rootFolder = Settings.RootAppFolder;
@@ -78,7 +78,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
         initRecorder(MediaRecorder.AudioSource.VOICE_CALL, MediaRecorder.OutputFormat.AMR_WB, MediaRecorder.AudioEncoder.AMR_WB);
 
-        File fileName = new File(todayFolder.getAbsolutePath() + File.separator + new Date().getTime() + ".amr");
+        File fileName = new File(todayFolder.getAbsolutePath() + File.separator + incomingNumber + "_" + new Date().getTime() + ".amr");
         recorder.setOutputFile(Uri.fromFile(fileName).getPath());
 
 
@@ -94,7 +94,11 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
         try {
             recorder.start();
-            Thread.sleep(3000);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -103,9 +107,17 @@ public class MyPhoneStateListener extends PhoneStateListener {
             initRecorder(MediaRecorder.AudioSource.DEFAULT, MediaRecorder.OutputFormat.AMR_WB, MediaRecorder.AudioEncoder.AMR_WB);
 
             recorder.setOutputFile(Uri.fromFile(fileName).getPath());
-            recorder.prepare();
+            try {
+                recorder.prepare();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             recorder.start();
-            Thread.sleep(3000);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }
