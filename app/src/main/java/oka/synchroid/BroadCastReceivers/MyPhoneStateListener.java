@@ -1,30 +1,24 @@
 package oka.synchroid.BroadCastReceivers;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 import oka.synchroid.DataBase.DataBaseHelper;
 import oka.synchroid.Models.Settings;
 
 
 public class MyPhoneStateListener extends PhoneStateListener {
+    //  TESTTTTTTTTTTT
     private Context _context;
     private DataBaseHelper dataBaseHelper;
     private boolean isStartRecord = false;
@@ -82,11 +76,11 @@ public class MyPhoneStateListener extends PhoneStateListener {
             success = todayFolder.mkdir();
         }
         recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC );
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
 
-        File fileName = new File(todayFolder.getAbsolutePath() + File.separator+new Date().getTime() + ".3gp");
+        File fileName = new File(todayFolder.getAbsolutePath() + File.separator + new Date().getTime() + ".3gp");
         recorder.setOutputFile(Uri.fromFile(fileName).getPath());
 
 
@@ -97,7 +91,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
             recorder.start();
         } catch (IllegalStateException e) {
 
-          Log.d("DEBUG", e.toString());
+            Log.d("DEBUG", e.toString());
         } catch (IOException e) {
 
             e.printStackTrace();

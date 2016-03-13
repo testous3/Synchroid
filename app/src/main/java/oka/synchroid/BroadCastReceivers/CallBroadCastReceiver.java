@@ -10,7 +10,7 @@ import android.util.Log;
 
 
 public class CallBroadCastReceiver extends BroadcastReceiver {
-    MyPhoneStateListener PhoneListener=null;
+    private static MyPhoneStateListener PhoneListener = null;
 
     public void onReceive(Context context, Intent intent) {
 
@@ -20,8 +20,8 @@ public class CallBroadCastReceiver extends BroadcastReceiver {
                     .getSystemService(Context.TELEPHONY_SERVICE);
 
             //Create Listner
-            if(PhoneListener==null)
-                PhoneListener   = new MyPhoneStateListener(context);
+            if (PhoneListener == null)
+                PhoneListener = new MyPhoneStateListener(context);
 
             // Register listener for LISTEN_CALL_STATE
             tmgr.listen(PhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
