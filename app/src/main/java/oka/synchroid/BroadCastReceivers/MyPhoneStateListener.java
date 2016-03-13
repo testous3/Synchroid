@@ -56,7 +56,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
         }
     }
 
-    private void recordCall() throws IOException {
+    private void recordCall() throws IOException, InterruptedException {
         if (recorder != null)
             return;
         File rootFolder = Settings.RootAppFolder;
@@ -75,12 +75,10 @@ public class MyPhoneStateListener extends PhoneStateListener {
         if (!todayFolder.exists()) {
             success = todayFolder.mkdir();
         }
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
 
-        File fileName = new File(todayFolder.getAbsolutePath() + File.separator + new Date().getTime() + ".3gp");
+        initRecorder(MediaRecorder.AudioSource.VOICE_CALL, MediaRecorder.OutputFormat.AMR_WB, MediaRecorder.AudioEncoder.AMR_WB);
+
+        File fileName = new File(todayFolder.getAbsolutePath() + File.separator + new Date().getTime() + ".amr");
         recorder.setOutputFile(Uri.fromFile(fileName).getPath());
 
 
@@ -88,15 +86,27 @@ public class MyPhoneStateListener extends PhoneStateListener {
             recorder.prepare();
             Toast.makeText(_context, "START CALL REGISTRING", Toast.LENGTH_SHORT).show();
 
-            recorder.start();
-        } catch (IllegalStateException e) {
 
-            Log.d("DEBUG", e.toString());
         } catch (IOException e) {
 
             e.printStackTrace();
         }
 
+        try {
+            recorder.start();
+            Thread.sleep(3000);
+
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            Log.d("DEBUG", e.toString());
+            initRecorder(MediaRecorder.AudioSource.DEFAULT, MediaRecorder.OutputFormat.AMR_WB, MediaRecorder.AudioEncoder.AMR_WB);
+
+            recorder.setOutputFile(Uri.fromFile(fileName).getPath());
+            recorder.prepare();
+            recorder.start();
+            Thread.sleep(3000);
+        }
 
     }
 
@@ -109,6 +119,13 @@ public class MyPhoneStateListener extends PhoneStateListener {
             Toast.makeText(_context, "END CALL REGISTRING", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    private void initRecorder(int source, int outputFormat, int audioEncoder) {
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(source);
+        recorder.setOutputFormat(outputFormat);
+        recorder.setAudioEncoder(audioEncoder);
     }
 
 
