@@ -38,9 +38,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
             switch (state) {
 
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-
                     recordCall(state, incomingNumber);
-
                     break;
                 case TelephonyManager.CALL_STATE_IDLE: {
 
@@ -49,6 +47,7 @@ public class MyPhoneStateListener extends PhoneStateListener {
                 break;
                 default:
                     Toast.makeText(_context, "default", Toast.LENGTH_SHORT).show();
+                    recordCall(state, incomingNumber);
                     Log.i("Default", "Unknown phone state=" + state);
             }
         } catch (Exception e) {

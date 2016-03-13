@@ -12,11 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import oka.synchroid.Activities.ActivityBase;
+import oka.synchroid.Models.Settings;
+import oka.synchroid.Services.CallRecordServices;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +36,17 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        listView = (ListView) findViewById(R.id.listRecord);
+        ArrayAdapter adapter = new ArrayAdapter<File>(this, R.layout.activity_listview, CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>()));
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0,
+                                    View arg1, int arg2, long arg3) {
+                CallRecordServices.AudioPlayer((File) listView.getAdapter().getItem(arg2));
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,4 +122,29 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        listView = (ListView) findViewById(R.id.listRecord);
+        ArrayAdapter adapter = new ArrayAdapter<File>(this, R.layout.activity_listview, CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>()));
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0,
+                                    View arg1, int arg2, long arg3) {
+                CallRecordServices.AudioPlayer((File) listView.getAdapter().getItem(arg2));
+            }
+        });
+
+    }
+
+
 }
