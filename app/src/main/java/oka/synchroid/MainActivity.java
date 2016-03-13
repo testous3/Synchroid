@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import oka.synchroid.Activities.ActivityBase;
+import oka.synchroid.Models.FileRecordAdapter;
 import oka.synchroid.Models.Settings;
 import oka.synchroid.Services.CallRecordServices;
 
@@ -36,17 +37,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listView = (ListView) findViewById(R.id.listRecord);
-        ArrayAdapter adapter = new ArrayAdapter<File>(this, R.layout.activity_listview, CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>()));
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0,
-                                    View arg1, int arg2, long arg3) {
-                CallRecordServices.AudioPlayer((File) listView.getAdapter().getItem(arg2));
-            }
-        });
+        initListRecords();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +122,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        initListRecords();
 
+    }
+
+    private void initListRecords() {
         listView = (ListView) findViewById(R.id.listRecord);
-        ArrayAdapter adapter = new ArrayAdapter<File>(this, R.layout.activity_listview, CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>()));
+        ArrayList<File> listFiles = CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>());
+        FileRecordAdapter adapter = new FileRecordAdapter(this, R.layout.activity_listview, listFiles);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -143,7 +139,6 @@ public class MainActivity extends AppCompatActivity
                 CallRecordServices.AudioPlayer((File) listView.getAdapter().getItem(arg2));
             }
         });
-
     }
 
 
