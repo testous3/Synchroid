@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
     private void initListRecords() {
         listView = (ListView) findViewById(R.id.listRecord);
         ArrayList<File> listFiles = CallRecordServices.GetAllFileFromDirectory(Settings.RootRecordFolder, new ArrayList<File>());
-        FileRecordAdapter adapter = new FileRecordAdapter(this, R.layout.activity_listview, listFiles);
+        FileRecordAdapter adapter = new FileRecordAdapter(this.getApplicationContext(), R.layout.activity_listview, listFiles);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

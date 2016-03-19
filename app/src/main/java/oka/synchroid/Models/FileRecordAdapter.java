@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import oka.synchroid.R;
+import oka.synchroid.Services.CallRecordServices;
 
 /**
  * Created by okahoul on 13/03/2016.
@@ -26,19 +27,20 @@ public class FileRecordAdapter extends ArrayAdapter<File> {
     private Context context;
 
 
-    public FileRecordAdapter(Context context, int _resource, List<File> objects) {
-        super(context, _resource, objects);
+    public FileRecordAdapter(Context _context, int _resource, List<File> objects) {
+        super(_context, _resource, objects);
         resource = _resource;
-        inflater = LayoutInflater.from(context);
-        context = context;
+        inflater = LayoutInflater.from(_context);
+        context = _context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = (RelativeLayout) inflater.inflate(resource, null);
         File file = getItem(position);
-        TextView fileNameTextView = (TextView) convertView.findViewById(R.id.fileName);
-        fileNameTextView.setText(file.getName());
+        String contactName = file.getName().split("_")[0];
+        TextView fileNameTextView = (TextView) convertView.findViewById(R.id.contactName);
+        fileNameTextView.setText(CallRecordServices.getContactName(context, contactName));
         return convertView;
     }
 }

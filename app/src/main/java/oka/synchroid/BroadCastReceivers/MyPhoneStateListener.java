@@ -77,6 +77,8 @@ public class MyPhoneStateListener extends PhoneStateListener {
 
         initRecorder(MediaRecorder.AudioSource.VOICE_CALL, MediaRecorder.OutputFormat.AMR_WB, MediaRecorder.AudioEncoder.AMR_WB);
 
+        if (incomingNumber.isEmpty() || incomingNumber == null)
+            incomingNumber = "Inconnu";
         File fileName = new File(todayFolder.getAbsolutePath() + File.separator + incomingNumber + "_" + new Date().getTime() + ".amr");
         recorder.setOutputFile(Uri.fromFile(fileName).getPath());
 
